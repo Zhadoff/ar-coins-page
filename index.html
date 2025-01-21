@@ -12,42 +12,74 @@
       <!-- Камера -->
       <a-camera position="0 0 0"></a-camera>
 
+      <!-- Счетчик очков -->
+      <a-text id="scoreText" value="Очки: 0" position="0 2 -3" color="#FFF" scale="3 3 3"></a-text>
+
       <!-- Монеты -->
-      <a-entity id="coin1" geometry="primitive: circle; radius: 0.1;" material="color: gold;" position="0 0 -1"></a-entity>
-      <a-entity id="coin2" geometry="primitive: circle; radius: 0.1;" material="color: gold;" position="0.5 0 -1"></a-entity>
-      <a-entity id="coin3" geometry="primitive: circle; radius: 0.1;" material="color: gold;" position="-0.5 0 -1"></a-entity>
+      <a-entity id="coin1" geometry="primitive: circle; radius: 0.1;" material="color: red;" position="0 0 -1" class="coin" data-points="-1"></a-entity>
+      <a-entity id="coin2" geometry="primitive: circle; radius: 0.1;" material="color: yellow;" position="0.5 0 -1" class="coin" data-points="1"></a-entity>
+      <a-entity id="coin3" geometry="primitive: circle; radius: 0.1;" material="color: green;" position="-0.5 0 -1" class="coin" data-points="2"></a-entity>
+      <a-entity id="coin4" geometry="primitive: circle; radius: 0.1;" material="color: blue;" position="0 0.5 -1" class="coin" data-points="5"></a-entity>
 
       <!-- Анимация для монет -->
       <a-animation attribute="position" to="0 0.2 -1" dur="1000" repeat="indefinite" direction="alternate" target="#coin1"></a-animation>
       <a-animation attribute="position" to="0.5 0.2 -1" dur="1000" repeat="indefinite" direction="alternate" target="#coin2"></a-animation>
       <a-animation attribute="position" to="-0.5 0.2 -1" dur="1000" repeat="indefinite" direction="alternate" target="#coin3"></a-animation>
+      <a-animation attribute="position" to="0 0.7 -1" dur="1000" repeat="indefinite" direction="alternate" target="#coin4"></a-animation>
     </a-scene>
 
     <script>
       // Подключение Telegram WebApp API
       Telegram.WebApp.ready();
 
-      // Функция для добавления монеты в сцену
+      // Инициализация счётчика очков
+      let score = 0;
+
+      // Функция для добавления очков
+      function addPoints(coin) {
+        // Получаем количество очков, соответствующее монете
+        const points = parseInt(coin.getAttribute('data-points'));
+        score += points;
+
+        // Обновляем текст счетчика
+        const scoreText = document.getElementById('scoreText');
+        scoreText.setAttribute('value', `Очки: ${score}`);
+      }
+
+      // Функция для добавления монет
       function addCoin() {
         const scene = document.querySelector('a-scene');
+        const colors = ['red', 'yellow', 'green', 'blue'];
+        const points = [-1, 1, 2, 5];
+
+        const randomIndex = Math.floor(Math.random() * 4);
+        const color = colors[randomIndex];
+        const point = points[randomIndex];
+
         const newCoin = document.createElement('a-entity');
         newCoin.setAttribute('geometry', 'primitive: circle; radius: 0.1;');
-        newCoin.setAttribute('material', 'color: gold;');
-        newCoin.setAttribute('position', '0 0 -2'); // Позиция новой монеты
-        scene.appendChild(newCoin);
+        newCoin.setAttribute('material', `color: ${color};`);
+        newCoin.setAttribute('position', `0 ${Math.random() * 2} -2`);
+        newCoin.setAttribute('data-points', point); // Присваиваем количество очков
+        newCoin.classList.add('coin');
 
-        // Добавление анимации для новой монеты
+        // Добавляем анимацию
         const animation = document.createElement('a-animation');
         animation.setAttribute('attribute', 'position');
-        animation.setAttribute('to', '0 0.2 -2');
+        animation.setAttribute('to', `0 ${Math.random() * 0.5 + 0.2} -2`);
         animation.setAttribute('dur', '1000');
         animation.setAttribute('repeat', 'indefinite');
         animation.setAttribute('direction', 'alternate');
         newCoin.appendChild(animation);
+
+        scene.appendChild(newCoin);
+
+        // Добавляем обработчик для клика на монету
+        newCoin.addEventListener('click', () => addPoints(newCoin));
       }
 
-      // Пример добавления монеты
-      setInterval(addCoin, 5000); // Добавление монеты каждые 5 секунд
+      // Пример добавления монет каждые 3 секунды
+      setInterval(addCoin, 3000); // Добавление монеты каждые 3 секунды
     </script>
   </body>
 </html>

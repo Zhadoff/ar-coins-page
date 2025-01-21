@@ -10,22 +10,22 @@
   <body style="margin: 0; overflow: hidden;">
     <a-scene embedded arjs>
       <!-- Камера -->
-      <a-camera position="0 0 0"></a-camera>
+      <a-camera position="0 0 3"></a-camera> <!-- Камера немного дальше, чтобы все монеты были видны -->
 
       <!-- Счетчик очков -->
       <a-text id="scoreText" value="Очки: 0" position="0 2 -3" color="#FFF" scale="3 3 3"></a-text>
 
       <!-- Монеты -->
-      <a-entity id="coin1" geometry="primitive: circle; radius: 0.1;" material="color: red;" position="0 0 -1" class="coin" data-points="-1"></a-entity>
-      <a-entity id="coin2" geometry="primitive: circle; radius: 0.1;" material="color: yellow;" position="0.5 0 -1" class="coin" data-points="1"></a-entity>
-      <a-entity id="coin3" geometry="primitive: circle; radius: 0.1;" material="color: green;" position="-0.5 0 -1" class="coin" data-points="2"></a-entity>
-      <a-entity id="coin4" geometry="primitive: circle; radius: 0.1;" material="color: blue;" position="0 0.5 -1" class="coin" data-points="5"></a-entity>
+      <a-entity id="coin1" geometry="primitive: circle; radius: 0.1;" material="color: red;" position="0 0 -2" class="coin" data-points="-1"></a-entity>
+      <a-entity id="coin2" geometry="primitive: circle; radius: 0.1;" material="color: yellow;" position="0.5 0 -2" class="coin" data-points="1"></a-entity>
+      <a-entity id="coin3" geometry="primitive: circle; radius: 0.1;" material="color: green;" position="-0.5 0 -2" class="coin" data-points="2"></a-entity>
+      <a-entity id="coin4" geometry="primitive: circle; radius: 0.1;" material="color: blue;" position="0 0.5 -2" class="coin" data-points="5"></a-entity>
 
       <!-- Анимация для монет -->
-      <a-animation attribute="position" to="0 0.2 -1" dur="1000" repeat="indefinite" direction="alternate" target="#coin1"></a-animation>
-      <a-animation attribute="position" to="0.5 0.2 -1" dur="1000" repeat="indefinite" direction="alternate" target="#coin2"></a-animation>
-      <a-animation attribute="position" to="-0.5 0.2 -1" dur="1000" repeat="indefinite" direction="alternate" target="#coin3"></a-animation>
-      <a-animation attribute="position" to="0 0.7 -1" dur="1000" repeat="indefinite" direction="alternate" target="#coin4"></a-animation>
+      <a-animation attribute="position" to="0 0.2 -2" dur="1000" repeat="indefinite" direction="alternate" target="#coin1"></a-animation>
+      <a-animation attribute="position" to="0.5 0.2 -2" dur="1000" repeat="indefinite" direction="alternate" target="#coin2"></a-animation>
+      <a-animation attribute="position" to="-0.5 0.2 -2" dur="1000" repeat="indefinite" direction="alternate" target="#coin3"></a-animation>
+      <a-animation attribute="position" to="0 0.7 -2" dur="1000" repeat="indefinite" direction="alternate" target="#coin4"></a-animation>
     </a-scene>
 
     <script>
@@ -59,7 +59,7 @@
         const newCoin = document.createElement('a-entity');
         newCoin.setAttribute('geometry', 'primitive: circle; radius: 0.1;');
         newCoin.setAttribute('material', `color: ${color};`);
-        newCoin.setAttribute('position', `0 ${Math.random() * 2} -2`);
+        newCoin.setAttribute('position', `0 ${Math.random() * 2} -2`); // Позиция новой монеты
         newCoin.setAttribute('data-points', point); // Присваиваем количество очков
         newCoin.classList.add('coin');
 

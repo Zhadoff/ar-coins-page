@@ -9,8 +9,8 @@
   </head>
   <body style="margin: 0; overflow: hidden;">
     <a-scene embedded arjs>
-      <!-- Камера -->
-      <a-camera position="0 0 3"></a-camera> <!-- Камера немного дальше, чтобы все монеты были видны -->
+      <!-- Камера для AR -->
+      <a-camera position="0 0 3"></a-camera> <!-- Камера отдалена, чтобы все было видно -->
 
       <!-- Счетчик очков -->
       <a-text id="scoreText" value="Очки: 0" position="0 2 -3" color="#FFF" scale="3 3 3"></a-text>
@@ -37,11 +37,9 @@
 
       // Функция для добавления очков
       function addPoints(coin) {
-        // Получаем количество очков, соответствующее монете
         const points = parseInt(coin.getAttribute('data-points'));
         score += points;
 
-        // Обновляем текст счетчика
         const scoreText = document.getElementById('scoreText');
         scoreText.setAttribute('value', `Очки: ${score}`);
       }

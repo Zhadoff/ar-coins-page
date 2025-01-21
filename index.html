@@ -1,51 +1,55 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/jeromeetienne/ar.js/aframe/build/aframe-ar.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/jeromeetienne/ar.js/aframe/build/aframe-ar.js"></script>
     <title>AR Монеты</title>
+    <style>
+      body { margin: 0; overflow: hidden; }
+      #scoreText {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        font-size: 30px;
+        color: white;
+        z-index: 1;
+      }
+    </style>
   </head>
-  <body style="margin: 0; overflow: hidden;">
+  <body>
+    <div id="scoreText">Очки: 0</div>
     <a-scene embedded arjs>
       <!-- Камера для AR -->
-      <a-camera position="0 0 3"></a-camera> <!-- Камера отдалена, чтобы все было видно -->
-
-      <!-- Счетчик очков -->
-      <a-text id="scoreText" value="Очки: 0" position="0 2 -3" color="#FFF" scale="3 3 3"></a-text>
+      <a-camera position="0 0 3"></a-camera>
 
       <!-- Монеты -->
       <a-entity id="coin1" geometry="primitive: circle; radius: 0.1;" material="color: red;" position="0 0 -2" class="coin" data-points="-1"></a-entity>
       <a-entity id="coin2" geometry="primitive: circle; radius: 0.1;" material="color: yellow;" position="0.5 0 -2" class="coin" data-points="1"></a-entity>
       <a-entity id="coin3" geometry="primitive: circle; radius: 0.1;" material="color: green;" position="-0.5 0 -2" class="coin" data-points="2"></a-entity>
       <a-entity id="coin4" geometry="primitive: circle; radius: 0.1;" material="color: blue;" position="0 0.5 -2" class="coin" data-points="5"></a-entity>
-
-      <!-- Анимация для монет -->
-      <a-animation attribute="position" to="0 0.2 -2" dur="1000" repeat="indefinite" direction="alternate" target="#coin1"></a-animation>
-      <a-animation attribute="position" to="0.5 0.2 -2" dur="1000" repeat="indefinite" direction="alternate" target="#coin2"></a-animation>
-      <a-animation attribute="position" to="-0.5 0.2 -2" dur="1000" repeat="indefinite" direction="alternate" target="#coin3"></a-animation>
-      <a-animation attribute="position" to="0 0.7 -2" dur="1000" repeat="indefinite" direction="alternate" target="#coin4"></a-animation>
     </a-scene>
 
     <script>
-      // Подключение Telegram WebApp API
-      Telegram.WebApp.ready();
-
-      // Инициализация счётчика очков
       let score = 0;
 
-      // Функция для добавления очков
-      function addPoints(coin) {
-        const points = parseInt(coin.getAttribute('data-points'));
+      // Функция для обновления счета
+      function updateScore(points) {
         score += points;
-
-        const scoreText = document.getElementById('scoreText');
-        scoreText.setAttribute('value', `Очки: ${score}`);
+        document.getElementById('scoreText').innerText = `Очки: ${score}`;
       }
 
-      // Функция для добавления монет
-      function addCoin() {
+      // Добавление обработчика кликов на монеты
+      document.querySelectorAll('.coin').forEach(coin => {
+        coin.addEventListener('click', function() {
+          const points = parseInt(this.getAttribute('data-points'));
+          updateScore(points);
+        });
+      });
+
+      // Функция для создания случайных монет
+      function createRandomCoin() {
         const scene = document.querySelector('a-scene');
         const colors = ['red', 'yellow', 'green', 'blue'];
         const points = [-1, 1, 2, 5];
@@ -57,27 +61,19 @@
         const newCoin = document.createElement('a-entity');
         newCoin.setAttribute('geometry', 'primitive: circle; radius: 0.1;');
         newCoin.setAttribute('material', `color: ${color};`);
-        newCoin.setAttribute('position', `0 ${Math.random() * 2} -2`); // Позиция новой монеты
-        newCoin.setAttribute('data-points', point); // Присваиваем количество очков
+        newCoin.setAttribute('position', `0 ${Math.random() * 2} -2`);
+        newCoin.setAttribute('data-points', point);
         newCoin.classList.add('coin');
-
-        // Добавляем анимацию
-        const animation = document.createElement('a-animation');
-        animation.setAttribute('attribute', 'position');
-        animation.setAttribute('to', `0 ${Math.random() * 0.5 + 0.2} -2`);
-        animation.setAttribute('dur', '1000');
-        animation.setAttribute('repeat', 'indefinite');
-        animation.setAttribute('direction', 'alternate');
-        newCoin.appendChild(animation);
-
         scene.appendChild(newCoin);
 
-        // Добавляем обработчик для клика на монету
-        newCoin.addEventListener('click', () => addPoints(newCoin));
+        newCoin.addEventListener('click', function() {
+          updateScore(point);
+          scene.removeChild(newCoin); // Удаляем монету после клика
+        });
       }
 
-      // Пример добавления монет каждые 3 секунды
-      setInterval(addCoin, 3000); // Добавление монеты каждые 3 секунды
+      // Добавление монет через 3 секунды
+      setInterval(createRandomCoin, 3000); // Каждые 3 секунды создаются новые монеты
     </script>
   </body>
 </html>

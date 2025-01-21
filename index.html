@@ -1,96 +1,45 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/jeromeetienne/ar.js/aframe/build/aframe-ar.min.js"></script>
-    <title>GeoAR Монеты</title>
-  </head>
-  <body style="margin: 0; overflow: hidden;">
-    <a-scene
-      vr-mode-ui="enabled: false;"
-      embedded
-      arjs="sourceType: webcam; debugUIEnabled: false;"
-    >
-      <!-- Камера -->
-      <a-camera gps-camera rotation-reader></a-camera>
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
+        <script src="https://unpkg.com/aframe-look-at-component@0.8.0/dist/aframe-look-at-component.min.js"></script>
+        <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js"></script>
+    </head>
 
-      <!-- Красная монета (-1 очко) -->
-      <a-entity
-        gps-entity-place="latitude: 0; longitude: 0;"
-        geometry="primitive: circle; radius: 0.3;"
-        material="color: red;"
-        position="0 1 0"
-        scale="1 1 1"
-      >
-        <a-text
-          value="-1"
-          align="center"
-          position="0 0.5 0"
-          color="white"
-          scale="2 2 2"
-        ></a-text>
-      </a-entity>
+    <body style="margin: 0; overflow: hidden;">
+        <a-scene
+            embedded
+            loading-screen="enabled: false;"
+            arjs="sourceType: webcam; debugUIEnabled: false;"
+        >
+                <a-image
+                    src="assets/asset.gif"
+                    look-at="[gps-camera]"
+                    scale="1 1 1"
+                    gps-entity-place="latitude: 55.80606810066485; longitude: -310.9202547278256;"
+                ></a-image>
+                <a-image
+                    src="assets/asset.gif"
+                    look-at="[gps-camera]"
+                    scale="1 1 1"
+                    gps-entity-place="latitude: 55.80626104612556; longitude: -310.9202761854977;"
+                ></a-image>
+                <a-image
+                    src="assets/asset.gif"
+                    look-at="[gps-camera]"
+                    scale="1 1 1"
+                    gps-entity-place="latitude: 55.806233913227935; longitude: -310.9202815499157;"
+                ></a-image>
+                <a-image
+                    src="assets/asset.gif"
+                    look-at="[gps-camera]"
+                    scale="1 1 1"
+                    gps-entity-place="latitude: 55.80604699719705; longitude: -310.92022790573543;"
+                ></a-image>
 
-      <!-- Желтая монета (1 очко) -->
-      <a-entity
-        gps-entity-place="latitude: 0; longitude: 0;"
-        geometry="primitive: circle; radius: 0.3;"
-        material="color: yellow;"
-        position="1 1 0"
-        scale="1 1 1"
-      >
-        <a-text
-          value="+1"
-          align="center"
-          position="0 0.5 0"
-          color="black"
-          scale="2 2 2"
-        ></a-text>
-      </a-entity>
-
-      <!-- Зеленая монета (2 очка) -->
-      <a-entity
-        gps-entity-place="latitude: 0; longitude: 0;"
-        geometry="primitive: circle; radius: 0.3;"
-        material="color: green;"
-        position="-1 1 0"
-        scale="1 1 1"
-      >
-        <a-text
-          value="+2"
-          align="center"
-          position="0 0.5 0"
-          color="white"
-          scale="2 2 2"
-        ></a-text>
-      </a-entity>
-    </a-scene>
-
-    <script>
-      // Определяем текущее местоположение пользователя
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const lat = position.coords.latitude;
-          const lon = position.coords.longitude;
-
-          // Устанавливаем координаты монет
-          const coins = document.querySelectorAll("[gps-entity-place]");
-          coins.forEach((coin, index) => {
-            const offsetLat = 0.00001 * (index + 1); // Смещение для каждой монеты
-            const offsetLon = 0.00001 * (index + 1); // Смещение для каждой монеты
-            coin.setAttribute(
-              "gps-entity-place",
-              `latitude: ${lat + offsetLat}; longitude: ${lon + offsetLon}`
-            );
-          });
-        },
-        (error) => {
-          console.error("Ошибка определения местоположения:", error);
-        },
-        { enableHighAccuracy: true }
-      );
-    </script>
-  </body>
+            <a-camera gps-camera rotation-reader></a-camera>
+        </a-scene>
+    </body>
 </html>
